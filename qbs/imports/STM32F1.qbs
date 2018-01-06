@@ -3,6 +3,8 @@ import qbs
 Product {
     Depends { name: "cpp" }
 
+    property string linkerScriptFile: ""
+
     cpp.positionIndependentCode: false
     type: ["application", "hex", "size"]
 
@@ -19,7 +21,9 @@ Product {
         "-g", "-ggdb3",
         "-mcpu=cortex-m3", "-mthumb",
         "-Og",
-        "-DNDEBUG"
+        "-DNDEBUG",
+
+
     ]
     cpp.cFlags: [
         "-Wstrict-prototypes",
@@ -31,10 +35,11 @@ Product {
         "-fno-exceptions"
     ]
     cpp.linkerFlags: [
-        "-Wl,-T" + sourceDirectory + "/../STM32F103RB_FLASH.ld",
-        "-g",
-        "-mcpu=cortex-m3", "-mthumb",
-        "-Wl,--gc-sections",
-        "-specs=nano.specs", "-specs=nosys.specs"
+        "-T" + linkerScriptFile,
+        "--gc-sections"
+    ]
+    cpp.driverFlags: [
+        "--specs=nosys.specs",
+        "-nostartfiles"
     ]
 }
